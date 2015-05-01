@@ -19,7 +19,8 @@ local ChatNotification = {}
 -- Constants
 -----------------------------------------------------------------------------------------------
 
-local iLastMessage = 0;
+local iLastMessage = 0
+local strPlayerName = nil
  
 -----------------------------------------------------------------------------------------------
 -- Initialization
@@ -53,6 +54,7 @@ function ChatNotification:OnLoad()
 	self.xmlDoc = XmlDoc.CreateFromFile("ChatNotification.xml")
 	self.xmlDoc:RegisterCallback("OnDocLoaded", self)
 	
+	strPlayerName = GameLib.GetPlayerUnit():GetName()
 	Apollo.RegisterEventHandler("ChatMessage", "OnChatMessage", self)
 end
 
@@ -91,10 +93,20 @@ function ChatNotification:OnChatMessage(channelSource, tMessage)
 	vType = channelSource:GetType()
 	
 	if vType == nil then return end
-	if tMessage.bSelf then iLastMessage = os.time() return end
+	
+	-- if tMessage.bSelf then iLastMessage = os.time() return end
+	
 	if vType == ChatSystemLib.ChatChannel_Guild and (os.time() - iLastMessage) > 10 then
-		Sound.Play(Sound.PlayUIWIndowMetalClose)
 		iLastMessage = os.time()
+		
+		for key,value in pairs(tMessage.arMessageSegments) do
+			if string.find(string.lower(value.strText), string.lower(strPlayerName)) then
+				Sound.Play(Sound.PlayUIWindowCommoditiesExchangeOpen)
+				return
+			end
+		end
+
+		Sound.Play(Sound.PlayUIWIndowMetalClose)
 	end
 end
 
