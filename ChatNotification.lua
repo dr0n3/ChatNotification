@@ -94,7 +94,7 @@ function ChatNotification:OnChatMessage(channelSource, tMessage)
 	
 	if vType == nil then return end
 	
-	-- if tMessage.bSelf then iLastMessage = os.time() return end
+	if tMessage.bSelf then iLastMessage = os.time() return end
 	
 	if vType == ChatSystemLib.ChatChannel_Guild and (os.time() - iLastMessage) > 10 then
 		iLastMessage = os.time()
