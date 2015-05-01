@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Addon Author="Finn Walker" APIVersion="9" Name="ChatNotification" Description="Plays a sound if someone whispers you or writes in guild chat.">
+<Addon Author="Paul Friedrich" APIVersion="9" Name="ChatNotification" Description="Plays a sound if someone writes in guild chat.">
     <Script Name="ChatNotification.lua"/>
     <Form Name="ChatNotification.xml"/>
 </Addon>
