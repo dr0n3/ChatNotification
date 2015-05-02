@@ -21,6 +21,7 @@ local ChatNotification = {}
 
 local iLastMessage = 0
 local strPlayerName = nil
+local bInitialized = false
  
 -----------------------------------------------------------------------------------------------
 -- Initialization
@@ -54,7 +55,6 @@ function ChatNotification:OnLoad()
 	self.xmlDoc = XmlDoc.CreateFromFile("ChatNotification.xml")
 	self.xmlDoc:RegisterCallback("OnDocLoaded", self)
 	
-	strPlayerName = GameLib.GetPlayerUnit():GetName()
 	Apollo.RegisterEventHandler("ChatMessage", "OnChatMessage", self)
 end
 
@@ -79,7 +79,7 @@ function ChatNotification:OnDocLoaded()
 		-- e.g. Apollo.RegisterEventHandler("KeyDown", "OnKeyDown", self)
 		Apollo.RegisterSlashCommand("chatnotification", "OnChatNotificationOn", self)
 
-		self.timer = ApolloTimer.Create(1.0, true, "OnTimer", self)
+		self.timer = ApolloTimer.Create(1.0, false, "OnTimerInitDelay", self)
 
 		-- Do additional Addon initialization here
 	end
@@ -90,8 +90,9 @@ end
 -----------------------------------------------------------------------------------------------
 
 function ChatNotification:OnChatMessage(channelSource, tMessage)
-	vType = channelSource:GetType()
+	if not bInitialized then return end
 	
+	vType = channelSource:GetType()
 	if vType == nil then return end
 	
 	if tMessage.bSelf then iLastMessage = os.time() return end
@@ -122,7 +123,8 @@ end
 
 -- on timer
 function ChatNotification:OnTimer()
-	-- Do your timer-related stuff here.
+	strPlayerName = GameLib.GetPlayerUnit():GetName()
+	bInitialized = true
 end
 
 
